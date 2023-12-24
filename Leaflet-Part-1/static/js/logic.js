@@ -20,26 +20,25 @@ let queryUrl= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_wee
 });
 
 function markerSize(magnitude) {
-  return magnitude * 2000;
+  return magnitude * 20000;
 };
 
 function chooseColor(depth) {
-      switch(true) {
-        case depth > 90:
-          return "red";
-        case depth > 70:
-          return "orangered";
-        case depth > 50:
-          return "orange";
-        case depth > 30:
-          return "gold";
-        case depth > 10:
-          return "yellow";
-        default:
-          return "green";
-      }
-    }
-
+  switch(true) {
+    case depth > 10:
+      return "red";
+    case depth > 8:
+      return "orangered";
+    case depth > 5:
+      return "orange";
+    case depth > 3:
+      return "gold";
+    case depth > 1:
+      return "yellow";
+    default:
+      return "green";
+  }
+}
 
 
 function createFeatures(earthquakeData) {
@@ -62,8 +61,8 @@ function createFeatures(earthquakeData) {
       let markers = {
         radius: markerSize(feature.properties.mag),
           fillColor: chooseColor(feature.geometry.coordinates[2]),
-          fillOpacity: 0.10,
-          color: "green",
+          fillOpacity: 0.40,
+          color: chooseColor(feature.geometry.coordinates[2]),
           stroke: true,
           weight: 0.5
       }
@@ -109,7 +108,7 @@ function createMap(earthquakes) {
   // Create our map, giving it the streetmap and earthquakes layers to display on load.
   let myMap = L.map("map", {
     center: [37.09, -95.71],
-    zoom: 10,
+    zoom: 5,
     layers: [ grayscale, earthquakes]
   });
 
@@ -119,7 +118,7 @@ function createMap(earthquakes) {
 let legend = L.control({position: "bottomright"});
 legend.onAdd = function() {
   let div = L.DomUtil.create("div", "info legend"),
-  depth = [-10, 10, 30, 50, 70, 90];
+  depth = [-10, 1, 3, 5, 8, 10];
 
   div.innerHTML += "<h3 style='text-align: center'>Depth</h3>"
 
